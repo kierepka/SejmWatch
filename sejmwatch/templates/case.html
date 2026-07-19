@@ -1,9 +1,8 @@
 {% extends "base.html" %}{% block title %}{{ case.title }} — SejmWatch{% endblock %}{% block content %}
-<a href="/" class="back">← Projekty</a><div class="case-head"><div><div class="eyebrow">PROFIL: HEALTH & MEDTECH</div><h1>{{ case.title }}</h1></div><div class="metric"><strong>{{ changes|length }}</strong><span>istotne zmiany</span></div></div>
+<a href="/" class="back">← Projekty</a><div class="case-head"><div><div class="eyebrow">PROFIL: HEALTH & MEDTECH</div><h1>{{ case.title }}</h1><a class="tree-link" href="/cases/{{ case.id }}/tree">Zobacz drzewo zmian 3D →</a></div><div class="metric"><strong>{{ changes|length }}</strong><span>istotne zmiany</span></div></div>
 <div class="versions">{% for doc in documents %}<div><span>{{ loop.index }}</span><b>{{ doc.version_label }}</b><small>{{ doc.id }}</small></div>{% endfor %}</div>
 <section class="ask"><h2>Zapytaj dokumenty</h2><form method="post" action="/cases/{{ case.id }}/ask"><input name="question" required value="Jak zmienił się okres dostosowawczy?" aria-label="Pytanie"><button>Znajdź odpowiedź →</button></form></section>
 <section><div class="section-title"><h2>Zweryfikowane zmiany</h2><span>diff deterministyczny</span></div>
 {% for change in changes %}<article class="change"><div class="change-top"><span class="badge {{ change.change_type }}">{{ change.change_type }}</span><code>{{ change.section_key }}</code>{% if change.new_page %}<a href="{{ change.source_url }}" target="_blank">źródło · str. {{ change.new_page }} ↗</a>{% endif %}</div>
 {% if change.old_text %}<div class="text old"><label>PRZED</label>{{ change.old_text }}</div>{% endif %}{% if change.new_text %}<div class="text new"><label>TERAZ</label>{{ change.new_text }}</div>{% endif %}</article>{% endfor %}</section>
 {% endblock %}
-

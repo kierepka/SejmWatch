@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% block title %}Drzewo zmian 3D — SejmWatch{% endblock %}{% block content %}
+<a href="/cases/{{ case.id }}" class="back">← Lista zmian</a>
+<section class="tree-head"><div><div class="eyebrow">INTERAKTYWNE DRZEWO 3D</div><h1>{{ case.title }}</h1><p>Przeciągnij, aby obrócić. Kliknij węzeł, aby zobaczyć szczegóły.</p></div>
+<form class="tree-ask" method="post" action="/ask"><label for="tree-question">Zapytaj LLM o te dokumenty</label><textarea id="tree-question" name="question" required maxlength="2000">Kto odpowiada za zmiany w tym projekcie i co dokładnie zmieniono?</textarea><button>Zapytaj AI →</button></form></section>
+<div class="tree-layout"><section class="tree-stage"><canvas id="change-tree" aria-label="Trójwymiarowe drzewo dokumentów i zmian"></canvas><div class="tree-legend"><span class="root-dot"></span>projekt <span class="doc-dot"></span>dokument <span class="add-dot"></span>dodano <span class="mod-dot"></span>zmieniono <span class="del-dot"></span>usunięto</div></section>
+<aside id="node-detail" class="node-detail"><div class="eyebrow">WYBRANY WĘZEŁ</div><h2>Kliknij element drzewa</h2><p>Wyświetlimy artykuł, typ zmiany, stronę i fragment dokumentu.</p></aside></div>
+{% if responsibility %}<section class="responsibility"><div class="section-title"><h2>Kto odpowiada za prace?</h2><span>dane oficjalne Sejmu</span></div>
+<div class="responsibility-grid"><article><span>SPRAWOZDAWCA KOMISJI</span><h3>{{ responsibility.rapporteur.firstLastName }}</h3><p>{{ responsibility.rapporteur.club }} · okręg {{ responsibility.rapporteur.districtNum }} {{ responsibility.rapporteur.districtName }}</p><a href="https://www.sejm.gov.pl/Sejm10.nsf/posel.xsp?id={{ responsibility.rapporteur.id }}" target="_blank">Profil posła ↗</a></article>
+{% if responsibility.chair %}<article><span>PRZEWODNICZĄCY KOMISJI CNT</span><h3>{{ responsibility.chair.firstName }} {{ responsibility.chair.lastName }}</h3><p>{{ responsibility.chair.club }}</p></article>{% endif %}
+<article><span>ORGAN PROWADZĄCY</span><h3>{{ responsibility.committee.name }}</h3><p>Komisja rozpatrywała projekt i przedstawiała sprawozdania. Sam projekt był rządowy.</p></article></div>
+<details><summary>Pełny skład komisji ({{ responsibility.committee.members|length }} posłów)</summary><ul class="member-list">{% for member in responsibility.committee.members %}<li>{{ member.firstName }} {{ member.lastName }} — {{ member.club }}{% if member.function %}, {{ member.function }}{% endif %}</li>{% endfor %}</ul></details>
+<p class="accountability-note">Sprawozdawca przedstawia stanowisko komisji, ale nie jest automatycznie autorem każdej poprawki. Oficjalne API nie przypisuje każdej różnicy tekstowej do konkretnego posła; SejmWatch nie zgaduje autorstwa.</p></section>{% endif %}
+<script>
+(() => {
+  const data = {{ nodes|tojson }};
+  const canvas = document.getElementById("change-tree"), ctx = canvas.getContext("2d");
+  const detail = document.getElementById("node-detail"), root = data.find(n => n.kind === "case");
+  let rx=-0.18, ry=0.25, drag=false, px=0, py=0, projected=[];
+  const docs=data.filter(n=>n.kind==="document");
+  root.x=0;root.y=0;root.z=0;
+  docs.forEach((d,i)=>{d.x=(i-(docs.length-1)/2)*250;d.y=120;d.z=(i%2?80:-80)});
+  docs.forEach((doc)=>{
+    const children=data.filter(n=>n.parent===doc.id);
+    children.forEach((n,i)=>{const a=i*Math.PI*(3-Math.sqrt(5)),r=80+Math.sqrt(i)*24;n.x=doc.x+Math.cos(a)*r;n.y=240+(i%9)*30;n.z=doc.z+Math.sin(a)*r});
+  });
+  function size(){const r=canvas.parentElement.getBoundingClientRect();canvas.width=r.width*devicePixelRatio;canvas.height=Math.max(560,r.width*.62)*devicePixelRatio;canvas.style.height=Math.max(560,r.width*.62)+"px";ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+  function point(n){let x=n.x,y=n.y-180,z=n.z;let x1=x*Math.cos(ry)-z*Math.sin(ry),z1=x*Math.sin(ry)+z*Math.cos(ry);let y1=y*Math.cos(rx)-z1*Math.sin(rx),z2=y*Math.sin(rx)+z1*Math.cos(rx);let s=650/(650+z2);return{x:canvas.clientWidth/2+x1*s,y:canvas.clientHeight/2+y1*s,z:z2,s}}
+  const colors={case:"#d8f24a",document:"#ffffff",added:"#83cf65",modified:"#ffc85c",removed:"#ef766b"};
+  function draw(){ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);projected=data.map(n=>({...point(n),n}));ctx.lineWidth=1;ctx.strokeStyle="rgba(210,230,218,.22)";data.forEach(n=>{if(!n.parent)return;const a=projected.find(p=>p.n.id===n.id),b=projected.find(p=>p.n.id===n.parent);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()});projected.sort((a,b)=>b.z-a.z).forEach(p=>{const r=(p.n.kind==="case"?13:p.n.kind==="document"?9:4)*p.s;ctx.beginPath();ctx.arc(p.x,p.y,Math.max(2,r),0,Math.PI*2);ctx.fillStyle=colors[p.n.kind]||"#ffc85c";ctx.fill();if(p.n.kind==="case"||p.n.kind==="document"){ctx.fillStyle="#eaf0eb";ctx.font="12px system-ui";ctx.fillText(p.n.label,p.x+r+5,p.y+4)}});requestAnimationFrame(draw)}
+  canvas.addEventListener("pointerdown",e=>{drag=true;px=e.clientX;py=e.clientY;canvas.setPointerCapture(e.pointerId)});
+  canvas.addEventListener("pointermove",e=>{if(!drag)return;ry+=(e.clientX-px)*.006;rx+=(e.clientY-py)*.006;px=e.clientX;py=e.clientY});
+  canvas.addEventListener("pointerup",e=>{drag=false;const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let hit=projected.map(p=>({...p,d:Math.hypot(p.x-x,p.y-y)})).sort((a,b)=>a.d-b.d)[0];if(hit&&hit.d<18){const n=hit.n;detail.innerHTML=`<div class="eyebrow">${n.kind.toUpperCase()}</div><h2>${n.label}</h2><p>${n.detail||""}</p>${n.page?`<p><b>Strona ${n.page}</b></p>`:""}${n.url?`<a href="${n.url}" target="_blank">Oficjalny PDF ↗</a>`:""}`;}});
+  addEventListener("resize",size);size();draw();
+})();
+</script>
+{% endblock %}

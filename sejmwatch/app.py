@@ -159,6 +159,66 @@ def case_view(request: Request, case_id: str):
     return templates.TemplateResponse(request, "case.html", {"case": case, "documents": documents, "changes": changes})
 
 
+@app.get("/cases/{case_id}/tree", response_class=HTMLResponse)
+def change_tree(request: Request, case_id: str):
+    with connect() as conn:
+        case = conn.execute("SELECT * FROM cases WHERE id=?", (case_id,)).fetchone()
+        if not case:
+            raise HTTPException(404, "Case not found")
+        documents = conn.execute(
+            "SELECT id, version_label, source_url FROM documents "
+            "WHERE case_id=? ORDER BY created_at, id", (case_id,)
+        ).fetchall()
+        rows = conn.execute(
+            "SELECT id, new_document_id, section_key, change_type, new_page, "
+            "substr(COALESCE(new_text, old_text),1,500) summary "
+            "FROM changes WHERE case_id=? AND section_key LIKE 'art.%' "
+            "ORDER BY id LIMIT 350", (case_id,)
+        ).fetchall()
+        if not rows:
+            rows = conn.execute(
+                "SELECT id, new_document_id, section_key, change_type, new_page, "
+                "substr(COALESCE(new_text, old_text),1,500) summary "
+                "FROM changes WHERE case_id=? ORDER BY id LIMIT 250", (case_id,)
+            ).fetchall()
+    nodes = [{
+        "id": "case", "parent": None, "kind": "case",
+        "label": case["title"], "detail": "Proces legislacyjny",
+    }]
+    for doc in documents:
+        nodes.append({
+            "id": doc["id"], "parent": "case", "kind": "document",
+            "label": doc["version_label"], "detail": doc["id"], "url": doc["source_url"],
+        })
+    for row in rows:
+        nodes.append({
+            "id": f"change-{row['id']}", "parent": row["new_document_id"],
+            "kind": row["change_type"], "label": row["section_key"],
+            "detail": row["summary"], "page": row["new_page"],
+        })
+    responsibility = None
+    if case_id == "sejm-10-2443":
+        try:
+            api = SejmAPI()
+            committee = api.committee("CNT", 10)
+            rapporteur = api.member(257, 10)
+            chair = next(
+                (m for m in committee["members"] if m.get("function") == "przewodniczący"),
+                None,
+            )
+            responsibility = {
+                "rapporteur": rapporteur,
+                "chair": chair,
+                "committee": committee,
+            }
+        except Exception:
+            responsibility = None
+    return templates.TemplateResponse(
+        request, "tree.html",
+        {"case": case, "nodes": nodes, "responsibility": responsibility},
+    )
+
+
 @app.post("/cases/{case_id}/ask", response_class=HTMLResponse)
 def ask(request: Request, case_id: str, question: str = Form(...)):
     try:

@@ -39,6 +39,12 @@ class SejmAPI:
     def interpellation(self, number: int, term: int = 10) -> dict:
         return self._get(f"/term{term}/interpellations/{number}")
 
+    def committee(self, code: str, term: int = 10) -> dict:
+        return self._get(f"/term{term}/committees/{quote(code, safe='')}")
+
+    def member(self, member_id: int, term: int = 10) -> dict:
+        return self._get(f"/term{term}/MP/{member_id}")
+
     @staticmethod
     def attachment_url(term: int, number: str, attachment: str) -> str:
         return (
