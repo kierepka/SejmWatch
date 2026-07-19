@@ -1,0 +1,9 @@
+.global-ask{margin-top:40px;background:#fff;border:1px solid var(--ink);padding:18px;box-shadow:7px 7px 0 var(--ink)}
+.global-ask label{font:700 11px monospace;color:var(--green)}
+.global-ask div{display:flex;margin:10px 0}
+.global-ask input{flex:1;border:1px solid var(--line);padding:17px;font-size:16px}
+.global-ask button{border:0;background:var(--lime);padding:0 24px;font-weight:800;cursor:pointer}
+.global-ask small{color:var(--muted)}
+.ai-answer{white-space:pre-wrap;background:#fff;border-left:5px solid var(--green);font-size:18px;line-height:1.7;padding:28px;margin:30px 0 50px}
+.disclaimer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+@media(max-width:700px){.global-ask div{display:block}.global-ask input,.global-ask button{width:100%}.global-ask button{padding:15px}}

@@ -1,12 +1,14 @@
 import os
 from pathlib import Path
 
+import httpx
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from .db import connect, default_path, init_db
+from .ai import AIUnavailable, ask_ai, check_rate_limit, retrieve_context
 from .demo import seed
 from .diffing import compare_documents
 from .ingest import download_pdf, import_document
@@ -38,6 +40,31 @@ def home(request: Request):
             "FROM cases c LEFT JOIN documents d ON d.case_id=c.id LEFT JOIN changes ch ON ch.case_id=c.id GROUP BY c.id"
         ).fetchall()
     return templates.TemplateResponse(request, "home.html", {"cases": cases})
+
+
+@app.post("/ask", response_class=HTMLResponse)
+def ask_anything(request: Request, question: str = Form(..., max_length=2000)):
+    client_id = request.client.host if request.client else "unknown"
+    try:
+        check_rate_limit(client_id)
+        result = ask_ai(question, retrieve_context(default_path(), question))
+        return templates.TemplateResponse(
+            request, "global_answer.html", {"question": question, **result}
+        )
+    except (ValueError, AIUnavailable) as exc:
+        return templates.TemplateResponse(
+            request,
+            "global_answer.html",
+            {"question": question, "error": str(exc)},
+            status_code=429 if "Limit 10" in str(exc) else 503,
+        )
+    except httpx.HTTPError:
+        return templates.TemplateResponse(
+            request,
+            "global_answer.html",
+            {"question": question, "error": "Darmowy model AI jest chwilowo niedostępny."},
+            status_code=502,
+        )
 
 
 @app.get("/sejm", response_class=HTMLResponse)

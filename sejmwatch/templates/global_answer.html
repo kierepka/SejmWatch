@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Odpowiedź AI — SejmWatch{% endblock %}{% block content %}
+<a href="/" class="back">← Zadaj inne pytanie</a><section class="answer">
+<div class="eyebrow">SEJMWATCH AI · {{ model or 'FREE TIER' }}</div><h1>{{ question }}</h1>
+{% if error %}<div class="error">{{ error }}</div>{% else %}
+<div class="ai-answer">{{ answer }}</div>
+{% if sources %}<div class="section-title"><h2>Dokumenty użyte w odpowiedzi</h2><span>{{ sources|length }} źródeł</span></div>
+{% for source in sources %}<blockquote><b>[{{ source.id }}] {{ source.document }} · strona {{ source.page }}</b><p>„{{ source.text[:360] }}{% if source.text|length > 360 %}…{% endif %}”</p><footer><a href="{{ source.url }}" target="_blank">Otwórz oficjalny dokument ↗</a></footer></blockquote>{% endfor %}{% endif %}
+<p class="disclaimer">Odpowiedź AI może zawierać błędy. W sprawach prawnych i medycznych zweryfikuj źródła.</p>
+{% endif %}</section>{% endblock %}

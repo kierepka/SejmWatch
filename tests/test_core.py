@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 import pytest
 
@@ -9,6 +10,7 @@ from sejmwatch.evidence import EvidenceError, validate_evidence
 from sejmwatch.models import Evidence
 from sejmwatch.rag import search
 from sejmwatch.sejm_api import SejmAPI
+from sejmwatch.ai import check_rate_limit, retrieve_context
 
 
 @pytest.fixture()
@@ -75,3 +77,17 @@ def test_sejm_pdf_url_uses_official_api():
     assert SejmAPI().primary_pdf(details) == (
         "https://api.sejm.gov.pl/sejm/term10/prints/1527-A/1527-A.pdf"
     )
+
+
+def test_global_context_search_returns_page_sources(db):
+    results = retrieve_context(db, "okres dostosowawczy")
+    assert results
+    assert results[0]["page_number"] >= 1
+
+
+def test_question_rate_limit():
+    client = f"test-{time.time_ns()}"
+    for _ in range(10):
+        check_rate_limit(client)
+    with pytest.raises(ValueError, match="Limit 10"):
+        check_rate_limit(client)
