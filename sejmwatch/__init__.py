@@ -1,0 +1,2 @@
+"""SejmWatch application package."""
+

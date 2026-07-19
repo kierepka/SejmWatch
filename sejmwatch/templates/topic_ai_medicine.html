@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}AI w medycynie — SejmWatch{% endblock %}{% block content %}
+<a href="/" class="back">← Projekty</a>
+<section class="topic-hero"><div class="eyebrow">MONITORING TEMATYCZNY · AI + HEALTH</div>
+<h1>Jak państwo reguluje<br><em>AI w medycynie?</em></h1>
+<p>Łączymy proces ustawodawczy z kontrolą poselską dotyczącą praktycznych wdrożeń w Ministerstwie Zdrowia i szpitalach.</p></section>
+{% if error %}<div class="error">{{ error }}</div>{% else %}
+<section class="summary-grid"><div><span>STATUS USTAWY</span><strong>{{ process.stages[-2].stageName }}</strong><p>{{ process.stages[-3].date }} · {{ process.stages[-3].stageName }}</p></div><div><span>PROCES</span><strong>Druk {{ process.number }}</strong><p>{{ process.description }}</p></div><div><span>ISTOTNE DLA MEDYCYNY</span><strong>Systemy wysokiego ryzyka</strong><p>Regulacja horyzontalna obejmuje nadzór nad systemami AI; zastosowanie medyczne należy oceniać wraz z przepisami sektorowymi.</p></div></section>
+<section><div class="section-title"><h2>Wersje projektu</h2><span>oficjalne PDF-y</span></div><div class="print-list">
+{% for print in prints %}<article class="print-row"><strong>NR {{ print.number }}</strong><div><h3>{{ print.title }}</h3><small>{{ print.deliveryDate }} · aktualizacja {{ print.changeDate }}</small></div><form method="post" action="/sejm/import/{{ print.number }}"><button class="import">Importuj i porównaj</button></form></article>{% endfor %}</div></section>
+<section class="topic-section"><div class="section-title"><h2>AI w ochronie zdrowia w praktyce</h2><span>kontrola poselska</span></div>
+{% for item in interpellations %}<article class="question-card"><div><span>INTERPELACJA NR {{ item.num }}</span><h3>{{ item.title }}</h3><p>Wpłynęła {{ item.receiptDate }} · adresaci: {{ item.to|join(', ') }}</p></div>{% for link in item.links %}{% if link.rel == 'web-description' %}<a href="{{ link.href }}" target="_blank">Otwórz w Sejmie ↗</a>{% endif %}{% endfor %}</article>{% endfor %}</section>
+<section class="guardrail"><h2>Co SejmWatch powinien odpowiedzieć użytkownikowi?</h2><p>Oddzielamy trzy poziomy: obowiązujące przepisy, projektowane mechanizmy nadzoru oraz deklaracje administracji dotyczące wdrożeń. System nie powinien twierdzić, że ustawa dopuszcza konkretne zastosowanie kliniczne bez cytatu i sprawdzenia regulacji wyrobów medycznych.</p></section>
+{% endif %}{% endblock %}

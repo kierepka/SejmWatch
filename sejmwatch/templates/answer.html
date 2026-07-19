@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}<a href="/cases/{{ case_id }}" class="back">← Oś zmian</a><section class="answer"><div class="eyebrow">ODPOWIEDŹ Z DOWODAMI</div><h1>{{ question }}</h1>
+{% if error %}<div class="error">Odrzucono odpowiedź: {{ error }}</div>{% else %}<p class="answer-text">{{ answer.answer }}</p><div class="confidence">Pewność: {{ answer.confidence }}</div>
+{% for ev in answer.evidence %}<blockquote>„{{ ev.quote }}”<footer>{{ ev.document_id }} · strona {{ ev.page }} {% if ev.url %}· <a href="{{ ev.url }}" target="_blank">oficjalny dokument ↗</a>{% endif %}</footer></blockquote>{% endfor %}{% endif %}</section>{% endblock %}
+
