@@ -1,11 +1,7 @@
-import json
-import os
 import re
 from typing import List
 
 from .db import connect
-from .evidence import validate_evidence
-from .models import Answer, Evidence
 
 
 def search(db_path: str, query: str, case_id: str, limit: int = 5) -> List[dict]:
@@ -21,35 +17,3 @@ def search(db_path: str, query: str, case_id: str, limit: int = 5) -> List[dict]
             (fts_query, case_id, limit),
         ).fetchall()
     return [dict(row) for row in rows]
-
-
-def answer_question(db_path: str, question: str, case_id: str) -> Answer:
-    context = search(db_path, question, case_id)
-    if not context:
-        raise ValueError("No relevant evidence found")
-    if not os.getenv("OPENAI_API_KEY"):
-        first = context[0]
-        quote = " ".join(first["text"].split())[:280]
-        answer = Answer(
-            answer="Znaleziono fragment źródłowy, ale model generatywny nie jest skonfigurowany.",
-            evidence=[Evidence(document_id=first["document_id"], page=first["page_number"], quote=quote, url=first["source_url"])],
-            confidence="medium",
-        )
-        validate_evidence(db_path, answer.evidence)
-        return answer
-
-    from openai import OpenAI
-
-    payload = [{"document_id": r["document_id"], "page": r["page_number"], "url": r["source_url"], "text": r["text"]} for r in context]
-    client = OpenAI()
-    response = client.responses.parse(
-        model=os.getenv("OPENAI_MODEL", "gpt-5.6"),
-        input=[
-            {"role": "system", "content": "Answer in Polish using only supplied pages. Every material claim needs a short verbatim quote. If evidence is insufficient, say so. This is information, not legal advice."},
-            {"role": "user", "content": f"Question: {question}\nPages: {json.dumps(payload, ensure_ascii=False)}"},
-        ],
-        text_format=Answer,
-    )
-    answer = response.output_parsed
-    validate_evidence(db_path, answer.evidence)
-    return answer
