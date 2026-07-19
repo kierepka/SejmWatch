@@ -2,17 +2,23 @@
 
 SejmWatch turns complex Polish legislative documents into a verified timeline of changes, personalized impact alerts, and answers backed by page-level citations.
 
-The hackathon MVP follows one complete path: two versions of one legislative document are imported page by page, linked to the same case, compared deterministically at article level, and made searchable. GPT‑5.6 may synthesize an answer, but the application accepts it only when every citation points to an existing page and the quoted text actually occurs on that page.
+The application imports official legislative documents page by page, links
+versions to the same case, compares them deterministically at article level,
+and makes them searchable. Public questions use a free-tier AI provider with
+retrieved source pages attached to the response.
 
-## Run the demo
+## Run the application
 
-### Docker (recommended for judges)
+### Docker
 
 ```bash
 docker compose up --build
 ```
 
-Open [http://localhost:8000](http://localhost:8000). The public synthetic demo dataset loads automatically and does not require an API key. Copy `.env.example` to `.env` and set `OPENAI_API_KEY` to enable GPT‑5.6 answers.
+Open [http://localhost:8000](http://localhost:8000). On first start the
+application downloads official prints 2443 and 2614, extracts their real PDF
+pages, and computes their article-level comparison. No fabricated legislative
+records are loaded.
 
 The **Najnowsze druki** screen reads live metadata from the official
 [Sejm API](https://api.sejm.gov.pl/sejm.html). Import downloads the first PDF
@@ -30,16 +36,17 @@ uvicorn sejmwatch.app:app --reload
 
 Run tests with `pytest`.
 
-## Demo path
+## Verification path
 
-1. Open **Odporność cyfrowa ochrony zdrowia**.
-2. Review the deterministic comparison of the original and committee versions.
-3. Notice that Article 14 changes the transition period from 24 to 12 months and Article 15 is new.
-4. Ask: “Jak zmienił się okres dostosowawczy?”
+1. Open **Rządowy projekt ustawy o systemach sztucznej inteligencji**.
+2. Review the comparison of official prints 2443 and 2614.
+3. Inspect detected changes against the linked official PDFs.
+4. Ask about responsibilities or the legislative changes.
 5. Inspect the page-level quote and official-document link.
 6. In the tests, see invalid pages and invented quotes rejected.
 
-The bundled data is intentionally synthetic and clearly labelled `druk-demo-*`; its source links lead to the official Sejm print index. This keeps the demo stable and redistributable. Production imports use official HTTPS PDF URLs through `sejmwatch.ingest.download_pdf()` and retain one text record per PDF page.
+Every application record originates from an official HTTPS PDF URL through
+`sejmwatch.ingest.download_pdf()` and retains one text record per PDF page.
 
 ## Architecture
 
@@ -48,7 +55,7 @@ flowchart LR
   A[Official PDF] --> B[PyMuPDF page extraction]
   B --> C[SQLite + FTS5]
   C --> D[Deterministic article diff]
-  D --> E[GPT-5.6 structured answer]
+  D --> E[Free-tier AI synthesis]
   E --> F[Quote and page validator]
   F --> G[Timeline and evidence-first Q&A]
 ```
@@ -72,18 +79,23 @@ This is an informational tool, not legal advice. The UI always exposes the under
 - SHA-256 document identity and version linkage;
 - article-aware deterministic diff;
 - SQLite/FTS5 retrieval scoped to a legislative case;
-- GPT‑5.6 Responses API integration with Pydantic structured output;
+- OpenAI-compatible free-tier AI integration;
 - post-generation evidence validation;
 - server-rendered timeline and Q&A interface;
-- stable demo data, Docker setup, and core tests.
+- official Sejm synchronization, Docker setup, and core tests.
 
 Nothing in this repository predates the hackathon scaffold. Future work—continuous Sejm monitoring, OCR, alerts, Senate/RCL sources, voting links, multi-user profiles, and Bielik/Ollama—is explicitly outside this MVP.
 
 ## Codex and human collaboration
 
-Codex was used as the implementation partner for repository scaffolding, architecture translation, application code, tests, container setup, and documentation. GPT‑5.6 is used at runtime only for grounded synthesis through the OpenAI Responses API; retrieval, version comparison, and evidence validation remain deterministic.
+Codex was used as the implementation partner for repository scaffolding,
+architecture translation, application code, tests, container setup, and
+documentation. Retrieval, version comparison, and evidence validation remain
+deterministic; the language model only synthesizes an answer from retrieved
+context.
 
-The human chose the product scope, the Health & MedTech demonstration profile, the evidence-first safety policy, and the final submission narrative. Before submission, add the Codex Session ID obtained with `/feedback` and preserve the repository commit history from the contest period.
+The human chose the product scope, the Health & MedTech profile, the
+evidence-first safety policy, and the final submission narrative.
 
 ## API entry points
 
@@ -100,7 +112,6 @@ The lower-level import and comparison functions are in `sejmwatch/ingest.py` and
 
 The application needs one web dyno and no paid add-ons, worker, scheduler, or
 managed database. SQLite lives on Heroku's ephemeral filesystem, so imported
-official documents can disappear after a restart or dyno replacement; the
-bundled demo is recreated automatically. This is the intentional low-cost
-hackathon trade-off. Add Postgres or object storage only when persistent
-monitoring becomes a requirement.
+official documents can disappear after a restart or dyno replacement. The
+canonical AI case is then reconstructed from official Sejm PDFs. Add Postgres
+or object storage only when persistent monitoring becomes a requirement.

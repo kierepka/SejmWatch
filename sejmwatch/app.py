@@ -9,10 +9,9 @@ from fastapi.templating import Jinja2Templates
 
 from .db import connect, default_path, init_db
 from .ai import AIUnavailable, ask_ai, check_rate_limit, retrieve_context
-from .demo import seed
 from .diffing import compare_documents
 from .ingest import download_pdf, import_document
-from .rag import answer_question
+from .official_sync import sync_official_ai_case
 from .sejm_api import SejmAPI
 
 
@@ -26,10 +25,8 @@ templates = Jinja2Templates(directory=BASE / "templates")
 def startup() -> None:
     path = default_path()
     init_db(path)
-    with connect(path) as conn:
-        empty = conn.execute("SELECT COUNT(*) FROM cases").fetchone()[0] == 0
-    if empty and os.getenv("SEJMWATCH_AUTO_SEED", "1") == "1":
-        seed(path)
+    if os.getenv("SEJMWATCH_AUTO_SYNC", "1") == "1":
+        sync_official_ai_case(path)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -165,10 +162,19 @@ def case_view(request: Request, case_id: str):
 @app.post("/cases/{case_id}/ask", response_class=HTMLResponse)
 def ask(request: Request, case_id: str, question: str = Form(...)):
     try:
-        answer = answer_question(default_path(), question, case_id)
-        return templates.TemplateResponse(request, "answer.html", {"case_id": case_id, "question": question, "answer": answer})
-    except ValueError as exc:
-        return templates.TemplateResponse(request, "answer.html", {"case_id": case_id, "question": question, "error": str(exc)}, status_code=422)
+        client_id = request.client.host if request.client else "unknown"
+        check_rate_limit(client_id)
+        result = ask_ai(question, retrieve_context(default_path(), question))
+        return templates.TemplateResponse(
+            request, "global_answer.html", {"question": question, **result}
+        )
+    except (ValueError, AIUnavailable) as exc:
+        return templates.TemplateResponse(
+            request,
+            "global_answer.html",
+            {"question": question, "error": str(exc)},
+            status_code=429 if "Limit 10" in str(exc) else 503,
+        )
 
 
 @app.get("/health")

@@ -31,7 +31,7 @@ def answer_question(db_path: str, question: str, case_id: str) -> Answer:
         first = context[0]
         quote = " ".join(first["text"].split())[:280]
         answer = Answer(
-            answer="Tryb demo: znaleziono poniższy fragment źródłowy. Skonfiguruj OPENAI_API_KEY, aby otrzymać syntezę GPT-5.6.",
+            answer="Znaleziono fragment źródłowy, ale model generatywny nie jest skonfigurowany.",
             evidence=[Evidence(document_id=first["document_id"], page=first["page_number"], quote=quote, url=first["source_url"])],
             confidence="medium",
         )
@@ -53,4 +53,3 @@ def answer_question(db_path: str, question: str, case_id: str) -> Answer:
     answer = response.output_parsed
     validate_evidence(db_path, answer.evidence)
     return answer
-
