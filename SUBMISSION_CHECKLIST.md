@@ -38,7 +38,8 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 - [x] Add repository URL.
 - [x] Add live demo and testing instructions.
 - [ ] Add public YouTube video.
-- [ ] Add `/feedback` Session ID.
+- [x] Add `/feedback` Session ID:
+  `019f7cac-6620-70b0-a149-d983dc9230c4`.
 - [ ] Preview every field.
 - [ ] Final submit before the deadline.
 

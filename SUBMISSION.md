@@ -185,16 +185,15 @@ gpt-oss-120b
   bill, inspect the deterministic change list or 3D tree, and ask a question.
   Each accepted answer shows an exact quotation, page, and official PDF. No
   credentials are required. Use `/en` for the English interface.
-- **Codex Session ID (27950):** obtain using `/feedback` in the primary Codex
-  build thread.
+- **Codex Session ID (27950):**
+  `019f7cac-6620-70b0-a149-d983dc9230c4`
 - **Developer-tool instructions (27951):** Not applicable.
 
 ## Do not submit until
 
 1. The demo video explicitly explains that GPT-5.6 was used through Codex to
    build the project, while the public runtime uses `gpt-oss-120b`.
-2. The `/feedback` Session ID has been obtained.
-3. A public YouTube video shorter than three minutes has been added.
-4. Submitter type and country have been confirmed.
-5. The final Devpost preview contains the current official-data description,
+2. A public YouTube video shorter than three minutes has been added.
+3. Submitter type and country have been confirmed.
+4. The final Devpost preview contains the current official-data description,
    not the old synthetic-demo description.

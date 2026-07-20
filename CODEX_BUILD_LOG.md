@@ -195,7 +195,9 @@ The human explicitly decided:
 
 ## Session ID requirement
 
-Devpost requires the `/feedback` Session ID from the primary Codex thread. A
-written summary or Git history does not replace that identifier. Run
-`/feedback` in the primary build thread and add the returned alphanumeric
-Session ID to submission field `27950`.
+Devpost requires the `/feedback` Session ID from the primary Codex thread. The
+ID for the primary SejmWatch build thread is:
+
+`019f7cac-6620-70b0-a149-d983dc9230c4`
+
+Use this value in submission field `27950`.
