@@ -53,15 +53,14 @@ not consume demo time with a weak query.
 
 ## 2:15–2:45 — Codex and GPT-5.6
 
-**Screen:** Git history, tests, and the exact verified GPT-5.6 integration or
-artifact.
+**Screen:** Git history, tests, and the primary Codex build thread.
 
-> Codex was my implementation partner for architecture, official API
+> I used GPT-5.6 through Codex as my implementation partner for architecture, official API
 > integration, evidence validation, tests, accessible 3D interaction,
 > bilingual UI, deployment, and live verification. I made the product
-> decisions around scope, source integrity, attribution, and cost. [Add one
-> exact, truthful sentence explaining the meaningful GPT-5.6 task and show its
-> output being validated.]
+> decisions around scope, source integrity, attribution, and cost. GPT-5.6 was
+> used to build and verify the application; the public runtime deliberately
+> uses the free-tier gpt-oss-120b model so the demo does not add model charges.
 
 ## 2:45–2:58 — close
 

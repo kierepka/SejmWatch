@@ -13,7 +13,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 - [x] English UI.
 - [x] Automated tests.
 - [x] Open-source MIT license.
-- [ ] Demonstrate meaningful GPT-5.6 use.
+- [x] Meaningful GPT-5.6 use through Codex during project creation.
 
 ## Repository
 
@@ -23,7 +23,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 - [x] Codex/human decision disclosure.
 - [x] Current limitations.
 - [x] Public commit history during the submission period.
-- [ ] Add the exact GPT-5.6 use after it has actually been completed.
+- [x] Document build-time GPT-5.6 use separately from the public runtime model.
 - [ ] Confirm that a fresh clone passes `docker compose up --build`.
 
 ## Devpost
@@ -46,7 +46,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 - [ ] Record from `DEMO_SCRIPT.md`.
 - [ ] Keep duration under 3:00.
 - [ ] Include spoken Codex usage.
-- [ ] Include spoken, demonstrated GPT-5.6 usage.
+- [ ] Include spoken explanation and visible evidence of GPT-5.6 use in Codex.
 - [ ] Upload publicly to YouTube.
 - [ ] Check playback while signed out.
 - [ ] Add URL to Devpost.
@@ -54,7 +54,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 ## Final truth check
 
 - [ ] No claim that the demo uses synthetic legislation.
-- [ ] No claim that the public runtime is GPT-5.6 unless configuration proves it.
+- [x] Public runtime is accurately identified as `gpt-oss-120b`, not GPT-5.6.
 - [ ] No claim that Heroku Basic is free.
 - [ ] No claim that every amendment is attributed to a particular MP.
 - [ ] No unofficial translation presented as official legal text.

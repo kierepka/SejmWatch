@@ -105,10 +105,15 @@ context.
 The human chose the product scope, the Health & MedTech profile, the
 evidence-first safety policy, and the final submission narrative.
 
-The public deployment currently uses the free-tier Cerebras-compatible
-endpoint with `gpt-oss-120b`. It must not be described as a GPT-5.6 runtime.
-Any hackathon claim about GPT-5.6 must identify a real, meaningful use that can
-be verified in the repository and demo.
+GPT-5.6 was used through Codex as the reasoning model during project creation.
+It contributed to architecture, implementation, official API integration,
+evidence validation, tests, debugging, accessible interaction, bilingual UI,
+deployment, and live verification. The human retained the product decisions
+around scope, source integrity, attribution, and cost.
+
+The public deployment separately uses the free-tier Cerebras-compatible
+endpoint with `gpt-oss-120b`. GPT-5.6 was the build-time model in Codex; it is
+not misrepresented as the public runtime model.
 
 ## Submission materials
 

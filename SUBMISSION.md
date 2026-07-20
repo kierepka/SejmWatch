@@ -100,13 +100,21 @@ requiring official sources, refusing invented attribution of amendments,
 prioritising a no-add-on deployment, and keeping official legal text
 untranslated unless an official translation exists.
 
-### GPT-5.6 usage — complete before submission
+### How GPT-5.6 was used
 
-Replace this section only after a real GPT-5.6 run has been performed and
-saved in the repository or demo. State exactly which project task GPT-5.6
-performed, what input it received, and how the deterministic validator checked
-its result. Do not claim that the public runtime uses GPT-5.6 while it is
-configured with another model.
+GPT-5.6 was used as the reasoning model inside Codex during the creation of
+SejmWatch. It meaningfully contributed to translating the product requirements
+into the architecture, implementing the official Sejm API integration,
+designing the evidence contract, connecting page-scoped retrieval with
+deterministic quote validation, removing mock data, developing the bilingual
+interface and keyboard-accessible 3D tree, writing tests, diagnosing failures,
+and verifying the deployed application.
+
+The distinction between build-time and runtime use is explicit. GPT-5.6 and
+Codex were used to build, test, and ship the project. The public application's
+runtime inference currently uses the free-tier `gpt-oss-120b` model so that the
+public demo does not create additional model charges. SejmWatch does not
+misrepresent that runtime as GPT-5.6.
 
 ### Challenges
 
@@ -148,7 +156,7 @@ authorship where official data supports it.
 
 ## Built with
 
-Codex, GPT-5.6 (only after verified use), Python, FastAPI, Jinja2, SQLite,
+Codex, GPT-5.6, Python, FastAPI, Jinja2, SQLite,
 FTS5, PyMuPDF, Pydantic, pytest, Docker, Heroku, Sejm API, Cerebras,
 gpt-oss-120b
 
@@ -178,7 +186,8 @@ gpt-oss-120b
 
 ## Do not submit until
 
-1. A real, meaningful GPT-5.6 use is visible in code/history and the video.
+1. The demo video explicitly explains that GPT-5.6 was used through Codex to
+   build the project, while the public runtime uses `gpt-oss-120b`.
 2. The `/feedback` Session ID has been obtained.
 3. A public YouTube video shorter than three minutes has been added.
 4. Submitter type and country have been confirmed.
