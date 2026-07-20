@@ -1,6 +1,11 @@
 # SejmWatch
 
-SejmWatch turns complex Polish legislative documents into a verified timeline of changes, personalized impact alerts, and answers backed by page-level citations.
+SejmWatch turns complex Polish legislative documents into a verified timeline
+of changes, thematic reports, and answers backed by page-level citations.
+
+**Live demo:** https://sejmwatch-c0e8a67cd6b2.herokuapp.com/
+
+**English UI:** https://sejmwatch-c0e8a67cd6b2.herokuapp.com/en
 
 The application imports official legislative documents page by page, links
 versions to the same case, compares them deterministically at article level,
@@ -100,6 +105,17 @@ context.
 The human chose the product scope, the Health & MedTech profile, the
 evidence-first safety policy, and the final submission narrative.
 
+The public deployment currently uses the free-tier Cerebras-compatible
+endpoint with `gpt-oss-120b`. It must not be described as a GPT-5.6 runtime.
+Any hackathon claim about GPT-5.6 must identify a real, meaningful use that can
+be verified in the repository and demo.
+
+## Submission materials
+
+- [Devpost submission package](SUBMISSION.md)
+- [Demo video script](DEMO_SCRIPT.md)
+- [Final submission checklist](SUBMISSION_CHECKLIST.md)
+
 ## API entry points
 
 - `GET /` — monitored legislative cases
@@ -119,3 +135,7 @@ official documents can disappear after a restart or dyno replacement. The
 canonical AI case is then reconstructed from official Sejm PDFs. Add Postgres
 or object storage only when persistent monitoring becomes a requirement.
 The monitor therefore reconstructs its baseline after a dyno replacement.
+
+## License
+
+MIT
