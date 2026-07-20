@@ -14,6 +14,7 @@ from .ai import (
 )
 from .diffing import compare_documents
 from .ingest import download_pdf, import_document
+from .monitor import start_monitor, stop_monitor
 from .official_sync import sync_official_ai_case
 from .sejm_api import SejmAPI
 
@@ -30,6 +31,13 @@ def startup() -> None:
     init_db(path)
     if os.getenv("SEJMWATCH_AUTO_SYNC", "1") == "1":
         sync_official_ai_case(path)
+    if os.getenv("SEJMWATCH_MONITOR", "1") == "1":
+        start_monitor()
+
+
+@app.on_event("shutdown")
+def shutdown() -> None:
+    stop_monitor()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -76,8 +84,13 @@ def sejm_prints(request: Request):
         api = SejmAPI()
         term = api.term(10)
         prints = api.prints(10, 30)
+        with connect() as conn:
+            monitor = conn.execute(
+                "SELECT * FROM monitor_runs ORDER BY id DESC LIMIT 1"
+            ).fetchone()
         return templates.TemplateResponse(
-            request, "sejm.html", {"term": term, "prints": prints}
+            request, "sejm.html",
+            {"term": term, "prints": prints, "monitor": monitor},
         )
     except Exception as exc:
         return templates.TemplateResponse(

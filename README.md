@@ -84,7 +84,10 @@ This is an informational tool, not legal advice. The UI always exposes the under
 - server-rendered timeline and Q&A interface;
 - official Sejm synchronization, Docker setup, and core tests.
 
-Nothing in this repository predates the hackathon scaffold. Future work—continuous Sejm monitoring, OCR, alerts, Senate/RCL sources, voting links, multi-user profiles, and Bielik/Ollama—is explicitly outside this MVP.
+The single web process also checks a recent snapshot of Sejm print metadata at
+startup and every six hours. This deliberately avoids a separate scheduler or
+worker. OCR, outbound alerts, Senate/RCL sources, voting links, multi-user
+profiles, and Bielik/Ollama remain future work.
 
 ## Codex and human collaboration
 
@@ -115,3 +118,4 @@ managed database. SQLite lives on Heroku's ephemeral filesystem, so imported
 official documents can disappear after a restart or dyno replacement. The
 canonical AI case is then reconstructed from official Sejm PDFs. Add Postgres
 or object storage only when persistent monitoring becomes a requirement.
+The monitor therefore reconstructs its baseline after a dyno replacement.

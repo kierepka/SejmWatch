@@ -3,6 +3,7 @@
 <section class="hero"><div class="eyebrow">OFICJALNE API KANCELARII SEJMU</div>
 <h1>Najnowsze druki<br><em>prosto ze źródła.</em></h1>
 {% if term %}<p>X kadencja · {{ term.prints.count }} druków · aktualizacja źródła: {{ term.prints.lastChanged }}</p>{% endif %}</section>
+{% if monitor %}<p class="monitor-status">Monitoring: {{ monitor.status }} · ostatnia kontrola {{ monitor.checked_at }} UTC · sprawdzono {{ monitor.print_count }} druków · nowych od poprzedniej kontroli: {{ monitor.new_count }}</p>{% endif %}
 {% if error %}<div class="error">{{ error }}</div>{% else %}
 <div class="print-list">{% for print in prints %}<article class="print-row">
   <strong>NR {{ print.number }}</strong>

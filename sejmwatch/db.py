@@ -41,6 +41,23 @@ CREATE TABLE IF NOT EXISTS changes (
   new_page INTEGER,
   UNIQUE(old_document_id, new_document_id, section_key)
 );
+CREATE TABLE IF NOT EXISTS monitored_prints (
+  term INTEGER NOT NULL,
+  number TEXT NOT NULL,
+  title TEXT NOT NULL,
+  delivery_date TEXT,
+  process_print TEXT,
+  first_seen_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(term, number)
+);
+CREATE TABLE IF NOT EXISTS monitor_runs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  checked_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  print_count INTEGER NOT NULL,
+  new_count INTEGER NOT NULL,
+  status TEXT NOT NULL
+);
 """
 
 
@@ -74,4 +91,3 @@ def replace_pages(conn: sqlite3.Connection, document_id: str, pages: Iterable[st
             "INSERT INTO pages_fts(document_id, page_number, text) VALUES (?, ?, ?)",
             (document_id, number, text),
         )
-

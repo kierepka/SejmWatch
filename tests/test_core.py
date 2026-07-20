@@ -8,6 +8,7 @@ from sejmwatch.diffing import compare_documents, sections_from_pages
 from sejmwatch.evidence import EvidenceError, validate_evidence
 from sejmwatch.ingest import import_document
 from sejmwatch.models import Evidence
+from sejmwatch.monitor import sync_print_metadata
 from sejmwatch.rag import search
 from sejmwatch.sejm_api import SejmAPI
 from sejmwatch.ai import check_rate_limit, retrieve_context
@@ -138,3 +139,15 @@ def test_topic_terms_expand_ai_and_health():
     assert "sztuczn" in terms
     assert "zdrow" in terms
     assert "szpital" in terms
+
+
+def test_monitor_detects_only_previously_unseen_prints(tmp_path, monkeypatch):
+    path = str(tmp_path / "monitor.db")
+    init_db(path)
+    rows = [{
+        "number": "3000", "title": "Projekt testowy",
+        "deliveryDate": "2026-07-20", "processPrint": ["3000"],
+    }]
+    monkeypatch.setattr(SejmAPI, "prints", lambda self, term, limit: rows)
+    assert sync_print_metadata(path)["new_count"] == 1
+    assert sync_print_metadata(path)["new_count"] == 0
