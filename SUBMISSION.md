@@ -116,6 +116,11 @@ runtime inference currently uses the free-tier `gpt-oss-120b` model so that the
 public demo does not create additional model charges. SejmWatch does not
 misrepresent that runtime as GPT-5.6.
 
+The project was created entirely through these Codex sessions; there was no
+separately implemented pre-existing application. The chronological development
+record and the division between Codex contributions and human product
+decisions are documented in `CODEX_BUILD_LOG.md`.
+
 ### Challenges
 
 The central challenge was preventing a fluent answer from outrunning its

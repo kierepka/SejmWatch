@@ -120,6 +120,7 @@ not misrepresented as the public runtime model.
 - [Devpost submission package](SUBMISSION.md)
 - [Demo video script](DEMO_SCRIPT.md)
 - [Final submission checklist](SUBMISSION_CHECKLIST.md)
+- [Complete Codex and GPT-5.6 build log](CODEX_BUILD_LOG.md)
 
 ## API entry points
 

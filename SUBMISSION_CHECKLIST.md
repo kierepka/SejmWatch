@@ -24,6 +24,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 - [x] Current limitations.
 - [x] Public commit history during the submission period.
 - [x] Document build-time GPT-5.6 use separately from the public runtime model.
+- [x] Complete chronological Codex/GPT-5.6 build log.
 - [ ] Confirm that a fresh clone passes `docker compose up --build`.
 
 ## Devpost
@@ -31,11 +32,11 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 - [x] Registered for OpenAI Build Week.
 - [x] Existing SejmWatch project.
 - [x] Category selected: Work & Productivity.
-- [ ] Replace the outdated Devpost description with `SUBMISSION.md`.
+- [x] Replace the outdated Devpost description with the current official-data description.
 - [ ] Confirm Submitter Type: Individual or Team.
 - [ ] Confirm country: Poland.
-- [ ] Add repository URL.
-- [ ] Add live demo and testing instructions.
+- [x] Add repository URL.
+- [x] Add live demo and testing instructions.
 - [ ] Add public YouTube video.
 - [ ] Add `/feedback` Session ID.
 - [ ] Preview every field.
