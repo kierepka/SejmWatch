@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Utwórz raport — SejmWatch{% endblock %}{% block content %}
+<a href="/" class="back">← Strona główna</a><section class="report-builder">
+<div class="eyebrow">GENERATOR RAPORTÓW TEMATYCZNYCH</div>
+<h1>Co chcesz<br><em>monitorować?</em></h1>
+<p>SejmWatch przeszuka aktualne druki i interpelacje, znajdzie proces legislacyjny oraz przygotuje raport AI z oficjalnymi źródłami.</p>
+<form method="get" action="/reports/topic">
+<label>Temat<input name="topic" required minlength="2" maxlength="160" placeholder="np. cyberbezpieczeństwo szpitali"></label>
+<label>Twój profil<input name="profile" maxlength="120" value="ochrona zdrowia i MedTech" placeholder="np. samorząd, przedsiębiorca, pacjent"></label>
+<button>Utwórz raport →</button></form>
+<div class="report-examples"><span>Przykłady:</span><a href="/reports/topic?topic=AI+w+medycynie&profile=ochrona+zdrowia">AI w medycynie</a><a href="/reports/topic?topic=cyberbezpieczeństwo&profile=szpital">Cyberbezpieczeństwo</a><a href="/reports/topic?topic=ochrona+danych+pacjentów&profile=pacjent">Dane pacjentów</a></div>
+</section>{% endblock %}

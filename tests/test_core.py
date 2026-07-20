@@ -109,3 +109,10 @@ def test_question_rate_limit():
         check_rate_limit(client)
     with pytest.raises(ValueError, match="Limit 10"):
         check_rate_limit(client)
+
+
+def test_topic_terms_expand_ai_and_health():
+    terms = SejmAPI._topic_terms("AI w medycynie")
+    assert "sztuczn" in terms
+    assert "zdrow" in terms
+    assert "szpital" in terms

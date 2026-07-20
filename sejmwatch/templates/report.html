@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Raport: {{ topic }} — SejmWatch{% endblock %}{% block content %}
+<a href="/reports/new" class="back">← Utwórz inny raport</a><section class="report-head"><div class="eyebrow">RAPORT TEMATYCZNY · PROFIL: {{ profile|upper }}</div><h1>{{ topic }}</h1>
+{% if model %}<span class="report-model">AI: {{ model }} · źródła: API Sejmu</span>{% endif %}</section>
+{% if error %}<div class="error">{{ error }}</div>{% else %}
+<section class="generated-report">{{ report }}</section>
+<section><div class="section-title"><h2>Oficjalne źródła raportu</h2><span>{{ sources|length }} rekordów</span></div>
+<div class="source-grid">{% for source in sources %}<article><span>[{{ source.id }}] {{ source.kind|upper }}</span><h3>{{ source.title }}</h3><p>Nr {{ source.number }} · {{ source.date or 'brak daty' }}</p><a href="{{ source.url }}" target="_blank">Otwórz źródło ↗</a>{% if source.kind == 'druk' %}<form method="post" action="/sejm/import/{{ source.number }}"><button>Importuj PDF do porównania</button></form>{% endif %}</article>{% endfor %}</div></section>
+{% if not sources %}<div class="error">Nie znaleziono oficjalnych rekordów dla tego tematu. Spróbuj użyć innych słów kluczowych.</div>{% endif %}
+<section class="report-followup"><h2>Zapytaj o raport</h2><form method="post" action="/ask"><input name="question" required value="Wyjaśnij najważniejsze konsekwencje raportu „{{ topic }}” dla profilu: {{ profile }}."><button>Zapytaj LLM →</button></form></section>
+{% endif %}{% endblock %}

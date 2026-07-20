@@ -6,9 +6,10 @@
   <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/ai.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='/tree.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/report.css') }}">
 </head>
 <body>
-  <header><a href="/" class="brand">SEJM<span>WATCH</span></a><nav><a href="/topics/ai-medicine">AI + medycyna</a><a href="/sejm">Najnowsze druki</a><div class="status">● EVIDENCE-FIRST</div></nav></header>
+  <header><a href="/" class="brand">SEJM<span>WATCH</span></a><nav><a href="/reports/new">Utwórz raport</a><a href="/topics/ai-medicine">AI + medycyna</a><a href="/sejm">Najnowsze druki</a><div class="status">● EVIDENCE-FIRST</div></nav></header>
   <main>{% block content %}{% endblock %}</main>
   <footer>Informacja publiczna, nie porada prawna · Każda teza wymaga weryfikowalnego źródła</footer>
 </body>

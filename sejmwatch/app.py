@@ -2,13 +2,16 @@ import os
 from pathlib import Path
 
 import httpx
-from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi import FastAPI, Form, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from .db import connect, default_path, init_db
-from .ai import AIUnavailable, ask_ai, check_rate_limit, retrieve_context
+from .ai import (
+    AIUnavailable, ask_ai, check_rate_limit, generate_topic_report,
+    retrieve_context,
+)
 from .diffing import compare_documents
 from .ingest import download_pdf, import_document
 from .official_sync import sync_official_ai_case
@@ -82,6 +85,57 @@ def sejm_prints(request: Request):
         )
 
 
+@app.get("/reports/new", response_class=HTMLResponse)
+def new_report(request: Request):
+    return templates.TemplateResponse(request, "report_new.html", {})
+
+
+@app.get("/reports/topic", response_class=HTMLResponse)
+def topic_report(
+    request: Request,
+    topic: str = Query(..., min_length=2, max_length=160),
+    profile: str = Query("obywatel", max_length=120),
+):
+    client_id = request.client.host if request.client else "unknown"
+    try:
+        check_rate_limit(client_id, limit=10)
+        api = SejmAPI(timeout=45)
+        prints = api.search_prints(topic, limit=12)
+        interpellations = api.search_interpellations(topic, limit=8)
+        process = None
+        if prints:
+            process_number = (prints[0].get("processPrint") or [None])[0]
+            if process_number:
+                try:
+                    process = api.process(str(process_number), 10)
+                except Exception:
+                    process = None
+        result = generate_topic_report(
+            topic, profile, prints, interpellations, process
+        )
+        return templates.TemplateResponse(
+            request, "report.html",
+            {
+                "topic": topic, "profile": profile, "prints": prints,
+                "interpellations": interpellations, "process": process,
+                **result,
+            },
+        )
+    except (ValueError, AIUnavailable) as exc:
+        return templates.TemplateResponse(
+            request, "report.html",
+            {"topic": topic, "profile": profile, "error": str(exc)},
+            status_code=429 if "Limit 10" in str(exc) else 503,
+        )
+    except httpx.HTTPError:
+        return templates.TemplateResponse(
+            request, "report.html",
+            {
+                "topic": topic, "profile": profile,
+                "error": "Nie udało się pobrać danych lub wygenerować raportu.",
+            },
+            status_code=502,
+        )
 @app.get("/topics/ai-medicine", response_class=HTMLResponse)
 def ai_medicine_topic(request: Request):
     try:
