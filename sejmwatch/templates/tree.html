@@ -1,30 +1,40 @@
-{% extends "base.html" %}{% block title %}Drzewo zmian 3D — SejmWatch{% endblock %}{% block content %}
-<a href="/cases/{{ case.id }}" class="back">← Lista zmian</a>
-<section class="tree-head"><div><div class="eyebrow">INTERAKTYWNE DRZEWO 3D</div><h1>{{ case.title }}</h1><p>Użyj strzałek, aby wybierać węzły, albo włącz pełne sterowanie kamerą.</p></div>
-<form class="tree-ask" method="post" action="/ask"><label for="tree-question">Zapytaj LLM o te dokumenty</label><textarea id="tree-question" name="question" required maxlength="2000">Kto odpowiada za zmiany w tym projekcie i co dokładnie zmieniono?</textarea><button>Zapytaj AI →</button></form></section>
-<div class="tree-controls" aria-label="Sterowanie drzewem">
-  <div class="control-mode" role="group" aria-label="Tryb nawigacji">
-    <button id="mode-simple" class="active" type="button" aria-pressed="true">Prosty</button>
-    <button id="mode-camera" type="button" aria-pressed="false">Pełny 3D</button>
+{% extends "base.html" %}{% block title %}{{ t("Drzewo zmian 3D","3D change tree") }} — SejmWatch{% endblock %}{% block content %}
+<a href="/cases/{{ case.id }}" class="back">← {{ t("Lista zmian","Change list") }}</a>
+<section class="tree-head"><div><div class="eyebrow">{{ t("INTERAKTYWNE DRZEWO 3D","INTERACTIVE 3D TREE") }}</div><h1 lang="pl">{{ case.title }}</h1><p>{{ t("Użyj strzałek, aby wybierać węzły, albo włącz pełne sterowanie kamerą.","Use the arrow keys to select nodes, or enable full camera controls.") }}</p></div>
+<form class="tree-ask" method="post" action="/ask"><label for="tree-question">{{ t("Zapytaj LLM o te dokumenty","Ask the LLM about these documents") }}</label><textarea id="tree-question" name="question" required maxlength="2000">{{ t("Kto odpowiada za zmiany w tym projekcie i co dokładnie zmieniono?","Who is responsible for this bill and what exactly changed?") }}</textarea><button>{{ t("Zapytaj AI →","Ask AI →") }}</button></form></section>
+{% if lang == 'en' %}<div class="source-language">Node titles and legal excerpts are official Polish source text. No unofficial translation is displayed.</div>{% endif %}
+<div class="tree-controls" aria-label="{{ t('Sterowanie drzewem','Tree controls') }}">
+  <div class="control-mode" role="group" aria-label="{{ t('Tryb nawigacji','Navigation mode') }}">
+    <button id="mode-simple" class="active" type="button" aria-pressed="true">{{ t("Prosty","Simple") }}</button>
+    <button id="mode-camera" type="button" aria-pressed="false">{{ t("Pełny 3D","Full 3D") }}</button>
   </div>
   <div class="control-actions">
-    <button id="node-prev" type="button" title="Poprzedni węzeł">← Poprzedni</button>
-    <button id="node-next" type="button" title="Następny węzeł">Następny →</button>
-    <button id="tree-reset" type="button">Wycentruj</button>
+    <button id="node-prev" type="button" title="{{ t('Poprzedni węzeł','Previous node') }}">← {{ t("Poprzedni","Previous") }}</button>
+    <button id="node-next" type="button" title="{{ t('Następny węzeł','Next node') }}">{{ t("Następny","Next") }} →</button>
+    <button id="tree-reset" type="button">{{ t("Wycentruj","Reset view") }}</button>
   </div>
-  <p id="tree-help"><b>Prosty:</b> strzałki wybierają węzeł · Enter pokazuje szczegóły · Home wraca do projektu.</p>
+  <p id="tree-help"><b>{{ t("Prosty:","Simple:") }}</b> {{ t("strzałki wybierają węzeł · Enter pokazuje szczegóły · Home wraca do projektu.","arrow keys select a node · Enter shows details · Home returns to the bill.") }}</p>
 </div>
 <div class="tree-layout"><section class="tree-stage"><canvas id="change-tree" tabindex="0" role="application" aria-label="Trójwymiarowe drzewo dokumentów i zmian" aria-describedby="tree-help"></canvas><div class="tree-focus-hint">Kliknij drzewo, aby używać klawiatury</div><div class="tree-legend"><span class="root-dot"></span>projekt <span class="doc-dot"></span>dokument <span class="add-dot"></span>dodano <span class="mod-dot"></span>zmieniono <span class="del-dot"></span>usunięto</div></section>
-<aside id="node-detail" class="node-detail" aria-live="polite"><div class="eyebrow">WYBRANY WĘZEŁ</div><h2>Wybierz element drzewa</h2><p>Strzałki prowadzą między dokumentami i zmianami. Enter pokazuje szczegóły.</p></aside></div>
-{% if responsibility %}<section class="responsibility"><div class="section-title"><h2>Kto odpowiada za prace?</h2><span>dane oficjalne Sejmu</span></div>
-<div class="responsibility-grid"><article><span>SPRAWOZDAWCA KOMISJI</span><h3>{{ responsibility.rapporteur.firstLastName }}</h3><p>{{ responsibility.rapporteur.club }} · okręg {{ responsibility.rapporteur.districtNum }} {{ responsibility.rapporteur.districtName }}</p><a href="https://www.sejm.gov.pl/Sejm10.nsf/posel.xsp?id={{ responsibility.rapporteur.id }}" target="_blank">Profil posła ↗</a></article>
-{% if responsibility.chair %}<article><span>PRZEWODNICZĄCY KOMISJI CNT</span><h3>{{ responsibility.chair.firstName }} {{ responsibility.chair.lastName }}</h3><p>{{ responsibility.chair.club }}</p></article>{% endif %}
-<article><span>ORGAN PROWADZĄCY</span><h3>{{ responsibility.committee.name }}</h3><p>Komisja rozpatrywała projekt i przedstawiała sprawozdania. Sam projekt był rządowy.</p></article></div>
-<details><summary>Pełny skład komisji ({{ responsibility.committee.members|length }} posłów)</summary><ul class="member-list">{% for member in responsibility.committee.members %}<li>{{ member.firstName }} {{ member.lastName }} — {{ member.club }}{% if member.function %}, {{ member.function }}{% endif %}</li>{% endfor %}</ul></details>
-<p class="accountability-note">Sprawozdawca przedstawia stanowisko komisji, ale nie jest automatycznie autorem każdej poprawki. Oficjalne API nie przypisuje każdej różnicy tekstowej do konkretnego posła; SejmWatch nie zgaduje autorstwa.</p></section>{% endif %}
+<aside id="node-detail" class="node-detail" aria-live="polite"><div class="eyebrow">{{ t("WYBRANY WĘZEŁ","SELECTED NODE") }}</div><h2>{{ t("Wybierz element drzewa","Select a tree element") }}</h2><p>{{ t("Strzałki prowadzą między dokumentami i zmianami. Enter pokazuje szczegóły.","Arrow keys move between documents and changes. Enter shows details.") }}</p></aside></div>
+{% if responsibility %}<section class="responsibility"><div class="section-title"><h2>{{ t("Kto odpowiada za prace?","Who is responsible for the work?") }}</h2><span>{{ t("dane oficjalne Sejmu","official Sejm data") }}</span></div>
+<div class="responsibility-grid"><article><span>{{ t("SPRAWOZDAWCA KOMISJI","COMMITTEE RAPPORTEUR") }}</span><h3>{{ responsibility.rapporteur.firstLastName }}</h3><p>{{ responsibility.rapporteur.club }} · {{ t("okręg","district") }} {{ responsibility.rapporteur.districtNum }} {{ responsibility.rapporteur.districtName }}</p><a href="https://www.sejm.gov.pl/Sejm10.nsf/posel.xsp?id={{ responsibility.rapporteur.id }}" target="_blank">{{ t("Profil posła ↗","MP profile ↗") }}</a></article>
+{% if responsibility.chair %}<article><span>{{ t("PRZEWODNICZĄCY KOMISJI CNT","CHAIR OF THE CNT COMMITTEE") }}</span><h3>{{ responsibility.chair.firstName }} {{ responsibility.chair.lastName }}</h3><p>{{ responsibility.chair.club }}</p></article>{% endif %}
+<article><span>{{ t("ORGAN PROWADZĄCY","RESPONSIBLE BODY") }}</span><h3 lang="pl">{{ responsibility.committee.name }}</h3><p>{{ t("Komisja rozpatrywała projekt i przedstawiała sprawozdania. Sam projekt był rządowy.","The committee considered the bill and submitted reports. The bill itself was introduced by the government.") }}</p></article></div>
+<details><summary>{{ t("Pełny skład komisji","Full committee membership") }} ({{ responsibility.committee.members|length }} {{ t("posłów","MPs") }})</summary><ul class="member-list">{% for member in responsibility.committee.members %}<li>{{ member.firstName }} {{ member.lastName }} — {{ member.club }}{% if member.function %}, <span lang="pl">{{ member.function }}</span>{% endif %}</li>{% endfor %}</ul></details>
+<p class="accountability-note">{{ t("Sprawozdawca przedstawia stanowisko komisji, ale nie jest automatycznie autorem każdej poprawki. Oficjalne API nie przypisuje każdej różnicy tekstowej do konkretnego posła; SejmWatch nie zgaduje autorstwa.","The rapporteur presents the committee’s position but is not automatically the author of every amendment. The official API does not attribute every textual difference to a specific MP; SejmWatch does not guess authorship.") }}</p></section>{% endif %}
 <script>
 (() => {
   const data = {{ nodes|tojson }};
+  const ui = {{ {
+    "noDetail": t("Brak dodatkowego opisu.","No additional description."),
+    "page": t("Strona","Page"),
+    "officialPdf": t("Oficjalny PDF ↗","Official PDF ↗"),
+    "selected": t("Wybrano:","Selected:"),
+    "treeLabel": t("Trójwymiarowe drzewo dokumentów i zmian","Three-dimensional tree of documents and changes"),
+    "simpleHelp": t("<b>Prosty:</b> strzałki wybierają węzeł · Enter pokazuje szczegóły · Home wraca do projektu.","<b>Simple:</b> arrow keys select a node · Enter shows details · Home returns to the bill."),
+    "fullHelp": t("<b>Pełny 3D:</b> WASD lub strzałki obracają · +/− przybliża · R centruje · N/P zmienia węzeł.","<b>Full 3D:</b> WASD or arrows rotate · +/− zooms · R resets · N/P changes node.")
+  }|tojson }};
   const canvas = document.getElementById("change-tree"), ctx = canvas.getContext("2d");
   const detail = document.getElementById("node-detail"), root = data.find(n => n.kind === "case");
   const help=document.getElementById("tree-help"), simpleButton=document.getElementById("mode-simple"), cameraButton=document.getElementById("mode-camera");
@@ -40,11 +50,11 @@
   function point(n){let x=n.x*zoom,y=(n.y-180)*zoom,z=n.z*zoom;let x1=x*Math.cos(ry)-z*Math.sin(ry),z1=x*Math.sin(ry)+z*Math.cos(ry);let y1=y*Math.cos(rx)-z1*Math.sin(rx),z2=y*Math.sin(rx)+z1*Math.cos(rx);let s=650/(650+z2);return{x:canvas.clientWidth/2+x1*s,y:canvas.clientHeight/2+y1*s,z:z2,s}}
   const colors={case:"#d8f24a",document:"#ffffff",added:"#83cf65",modified:"#ffc85c",removed:"#ef766b"};
   function draw(){ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);projected=data.map(n=>({...point(n),n}));ctx.lineWidth=1;ctx.strokeStyle="rgba(210,230,218,.22)";data.forEach(n=>{if(!n.parent)return;const a=projected.find(p=>p.n.id===n.id),b=projected.find(p=>p.n.id===n.parent);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()});projected.sort((a,b)=>b.z-a.z).forEach(p=>{const r=(p.n.kind==="case"?13:p.n.kind==="document"?9:4)*p.s;if(p.n.id===selected.id){ctx.beginPath();ctx.arc(p.x,p.y,Math.max(10,r+7),0,Math.PI*2);ctx.strokeStyle="#d8f24a";ctx.lineWidth=3;ctx.stroke()}ctx.beginPath();ctx.arc(p.x,p.y,Math.max(2,r),0,Math.PI*2);ctx.fillStyle=colors[p.n.kind]||"#ffc85c";ctx.fill();if(p.n.kind==="case"||p.n.kind==="document"){ctx.fillStyle="#eaf0eb";ctx.font="12px system-ui";ctx.fillText(p.n.label,p.x+r+5,p.y+4)}});requestAnimationFrame(draw)}
-  function showDetail(n){selected=n;detail.replaceChildren();const eyebrow=document.createElement("div");eyebrow.className="eyebrow";eyebrow.textContent=n.kind.toUpperCase();const title=document.createElement("h2");title.textContent=n.label;const text=document.createElement("p");text.textContent=n.detail||"Brak dodatkowego opisu.";detail.append(eyebrow,title,text);if(n.page){const page=document.createElement("p");const strong=document.createElement("b");strong.textContent=`Strona ${n.page}`;page.append(strong);detail.append(page)}if(n.url){const link=document.createElement("a");link.href=n.url;link.target="_blank";link.rel="noopener";link.textContent="Oficjalny PDF ↗";detail.append(link)}canvas.setAttribute("aria-label",`Wybrano: ${n.label}. Trójwymiarowe drzewo dokumentów i zmian`)}
+  function showDetail(n){selected=n;detail.replaceChildren();const eyebrow=document.createElement("div");eyebrow.className="eyebrow";eyebrow.textContent=n.kind.toUpperCase();const title=document.createElement("h2");title.lang="pl";title.textContent=n.label;const text=document.createElement("p");text.lang=n.detail?"pl":document.documentElement.lang;text.textContent=n.detail||ui.noDetail;detail.append(eyebrow,title,text);if(n.page){const page=document.createElement("p");const strong=document.createElement("b");strong.textContent=`${ui.page} ${n.page}`;page.append(strong);detail.append(page)}if(n.url){const link=document.createElement("a");link.href=n.url;link.target="_blank";link.rel="noopener";link.textContent=ui.officialPdf;detail.append(link)}canvas.setAttribute("aria-label",`${ui.selected} ${n.label}. ${ui.treeLabel}`)}
   function selectIndex(delta){const index=data.findIndex(n=>n.id===selected.id);showDetail(data[(index+delta+data.length)%data.length])}
   function selectRelative(direction){const current=projected.find(p=>p.n.id===selected.id);if(!current)return;const candidates=projected.filter(p=>p.n.id!==selected.id).map(p=>{const dx=p.x-current.x,dy=p.y-current.y;const valid=direction==="left"?dx<0:direction==="right"?dx>0:direction==="up"?dy<0:dy>0;return{...p,d:valid?Math.hypot(dx,dy)+Math.abs(direction==="left"||direction==="right"?dy:dx)*2:Infinity}}).sort((a,b)=>a.d-b.d);if(candidates[0]&&Number.isFinite(candidates[0].d))showDetail(candidates[0].n)}
   function reset(){rx=-0.18;ry=0.25;zoom=1;showDetail(root)}
-  function setMode(next){mode=next;const simple=mode==="simple";simpleButton.classList.toggle("active",simple);cameraButton.classList.toggle("active",!simple);simpleButton.setAttribute("aria-pressed",simple);cameraButton.setAttribute("aria-pressed",!simple);help.innerHTML=simple?"<b>Prosty:</b> strzałki wybierają węzeł · Enter pokazuje szczegóły · Home wraca do projektu.":"<b>Pełny 3D:</b> WASD lub strzałki obracają · +/− przybliża · R centruje · N/P zmienia węzeł." ;canvas.focus()}
+  function setMode(next){mode=next;const simple=mode==="simple";simpleButton.classList.toggle("active",simple);cameraButton.classList.toggle("active",!simple);simpleButton.setAttribute("aria-pressed",simple);cameraButton.setAttribute("aria-pressed",!simple);help.innerHTML=simple?ui.simpleHelp:ui.fullHelp;canvas.focus()}
   canvas.addEventListener("pointerdown",e=>{drag=true;moved=false;px=e.clientX;py=e.clientY;canvas.setPointerCapture(e.pointerId);canvas.focus()});
   canvas.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-px,dy=e.clientY-py;if(Math.abs(dx)+Math.abs(dy)>2)moved=true;ry+=dx*.006;rx+=dy*.006;px=e.clientX;py=e.clientY});
   canvas.addEventListener("pointerup",e=>{drag=false;if(moved)return;const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let hit=projected.map(p=>({...p,d:Math.hypot(p.x-x,p.y-y)})).sort((a,b)=>a.d-b.d)[0];if(hit&&hit.d<20)showDetail(hit.n)});

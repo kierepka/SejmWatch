@@ -1,9 +1,10 @@
-{% extends "base.html" %}{% block title %}Odpowiedź AI — SejmWatch{% endblock %}{% block content %}
-<a href="/" class="back">← Zadaj inne pytanie</a><section class="answer">
+{% extends "base.html" %}{% block title %}{{ t("Odpowiedź AI","AI answer") }} — SejmWatch{% endblock %}{% block content %}
+<a href="/" class="back">← {{ t("Zadaj inne pytanie","Ask another question") }}</a><section class="answer">
 <div class="eyebrow">SEJMWATCH AI · {{ model or 'FREE TIER' }}</div><h1>{{ question }}</h1>
 {% if error %}<div class="error">{{ error }}</div>{% else %}
 <div class="ai-answer">{{ answer }}</div>
-{% if sources %}<div class="section-title"><h2>Dokumenty użyte w odpowiedzi</h2><span>{{ sources|length }} źródeł</span></div>
-{% for source in sources %}<blockquote><b>[{{ source.id }}] {{ source.document }} · strona {{ source.page }}</b><p>„{{ source.text[:360] }}{% if source.text|length > 360 %}…{% endif %}”</p><footer><a href="{{ source.url }}" target="_blank">Otwórz oficjalny dokument ↗</a></footer></blockquote>{% endfor %}{% endif %}
-<p class="disclaimer">Odpowiedź AI może zawierać błędy. W sprawach prawnych i medycznych zweryfikuj źródła.</p>
+{% if sources %}<div class="section-title"><h2>{{ t("Dokumenty użyte w odpowiedzi","Documents used in the answer") }}</h2><span>{{ sources|length }} {{ t("źródeł","sources") }}</span></div>
+{% if lang == 'en' %}<div class="source-language">The quotations below are exact official Polish source text and have not been translated.</div>{% endif %}
+{% for source in sources %}<blockquote lang="pl"><b>[{{ source.id }}] {{ source.document }} · {{ t("strona","page") }} {{ source.page }}</b><p>„{{ source.text[:360] }}{% if source.text|length > 360 %}…{% endif %}”</p><footer><a href="{{ source.url }}" target="_blank">{{ t("Otwórz oficjalny dokument ↗","Open official document ↗") }}</a></footer></blockquote>{% endfor %}{% endif %}
+<p class="disclaimer">{{ t("Odpowiedź AI może zawierać błędy. W sprawach prawnych i medycznych zweryfikuj źródła.","AI answers may contain errors. Verify the sources in legal and medical matters.") }}</p>
 {% endif %}</section>{% endblock %}

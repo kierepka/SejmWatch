@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 import httpx
 from fastapi import FastAPI, Form, HTTPException, Query, Request
@@ -22,7 +23,46 @@ from .sejm_api import SejmAPI
 BASE = Path(__file__).parent
 app = FastAPI(title="SejmWatch", description="Evidence-first legislative change intelligence")
 app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
-templates = Jinja2Templates(directory=BASE / "templates")
+
+
+def language_context(request: Request) -> dict:
+    language = "en" if request.cookies.get("sejmwatch_lang") == "en" else "pl"
+    return {
+        "lang": language,
+        "t": lambda polish, english: english if language == "en" else polish,
+    }
+
+
+templates = Jinja2Templates(
+    directory=BASE / "templates", context_processors=[language_context]
+)
+
+
+@app.get("/language/{language}")
+def set_language(request: Request, language: str):
+    if language not in {"pl", "en"}:
+        raise HTTPException(404, "Unsupported language")
+    referer = request.headers.get("referer", "")
+    parsed = urlparse(referer)
+    target = parsed.path + (f"?{parsed.query}" if parsed.query else "")
+    if parsed.netloc != request.url.netloc or not target.startswith("/"):
+        target = "/"
+    response = RedirectResponse(target, status_code=303)
+    response.set_cookie(
+        "sejmwatch_lang", language, max_age=31536000,
+        secure=request.url.scheme == "https", httponly=True, samesite="lax",
+    )
+    return response
+
+
+@app.get("/en")
+def english_version(request: Request):
+    return set_language(request, "en")
+
+
+@app.get("/pl")
+def polish_version(request: Request):
+    return set_language(request, "pl")
 
 
 @app.on_event("startup")
@@ -57,7 +97,7 @@ def ask_anything(request: Request, question: str = Form(..., max_length=2000)):
         check_rate_limit(client_id)
         result = ask_ai(
             question, retrieve_context(default_path(), question),
-            db_path=default_path(),
+            db_path=default_path(), language=language_context(request)["lang"],
         )
         return templates.TemplateResponse(
             request, "global_answer.html", {"question": question, **result}
@@ -127,7 +167,8 @@ def topic_report(
                 except Exception:
                     process = None
         result = generate_topic_report(
-            topic, profile, prints, interpellations, process
+            topic, profile, prints, interpellations, process,
+            language=language_context(request)["lang"],
         )
         return templates.TemplateResponse(
             request, "report.html",
@@ -297,7 +338,10 @@ def ask(request: Request, case_id: str, question: str = Form(...)):
         context = retrieve_context(
             default_path(), question, case_id=case_id
         )
-        result = ask_ai(question, context, db_path=default_path())
+        result = ask_ai(
+            question, context, db_path=default_path(),
+            language=language_context(request)["lang"],
+        )
         return templates.TemplateResponse(
             request, "global_answer.html", {"question": question, **result}
         )

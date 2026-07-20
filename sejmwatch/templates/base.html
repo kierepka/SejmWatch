@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl">
+<html lang="{{ lang }}">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{% block title %}SejmWatch{% endblock %}</title>
@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="{{ url_for('static', path='/report.css') }}">
 </head>
 <body>
-  <header><a href="/" class="brand">SEJM<span>WATCH</span></a><nav><a href="/reports/new">Utwórz raport</a><a href="/topics/ai-medicine">AI + medycyna</a><a href="/sejm">Najnowsze druki</a><div class="status">● EVIDENCE-FIRST</div></nav></header>
+  <header><a href="/" class="brand">SEJM<span>WATCH</span></a><nav><a href="/reports/new">{{ t("Utwórz raport","Create report") }}</a><a href="/topics/ai-medicine">{{ t("AI + medycyna","AI + medicine") }}</a><a href="/sejm">{{ t("Najnowsze druki","Latest prints") }}</a><a class="language" href="/language/{{ 'pl' if lang == 'en' else 'en' }}" lang="{{ 'pl' if lang == 'en' else 'en' }}">{{ 'PL' if lang == 'en' else 'EN' }}</a><div class="status">● EVIDENCE-FIRST</div></nav></header>
   <main>{% block content %}{% endblock %}</main>
-  <footer>Informacja publiczna, nie porada prawna · Każda teza wymaga weryfikowalnego źródła</footer>
+  <footer>{{ t("Informacja publiczna, nie porada prawna · Każda teza wymaga weryfikowalnego źródła","Public information, not legal advice · Every claim requires a verifiable source") }}</footer>
 </body>
 </html>

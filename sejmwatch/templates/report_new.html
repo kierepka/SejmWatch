@@ -1,11 +1,12 @@
-{% extends "base.html" %}{% block title %}Utwórz raport — SejmWatch{% endblock %}{% block content %}
-<a href="/" class="back">← Strona główna</a><section class="report-builder">
-<div class="eyebrow">GENERATOR RAPORTÓW TEMATYCZNYCH</div>
-<h1>Co chcesz<br><em>monitorować?</em></h1>
-<p>SejmWatch przeszuka aktualne druki i interpelacje, znajdzie proces legislacyjny oraz przygotuje raport AI z oficjalnymi źródłami.</p>
+{% extends "base.html" %}{% block title %}{{ t("Utwórz raport","Create report") }} — SejmWatch{% endblock %}{% block content %}
+<a href="/" class="back">← {{ t("Strona główna","Home") }}</a><section class="report-builder">
+<div class="eyebrow">{{ t("GENERATOR RAPORTÓW TEMATYCZNYCH","TOPIC REPORT GENERATOR") }}</div>
+<h1>{{ t("Co chcesz","What do you want to") }}<br><em>{{ t("monitorować?","monitor?") }}</em></h1>
+<p>{{ t("SejmWatch przeszuka aktualne druki i interpelacje, znajdzie proces legislacyjny oraz przygotuje raport AI z oficjalnymi źródłami.","SejmWatch searches current prints and parliamentary questions, identifies legislative processes, and prepares an AI report backed by official sources.") }}</p>
+{% if lang == 'en' %}<div class="source-language">Report narration is in English. Official document titles and quotations remain in their source language unless an official English version exists.</div>{% endif %}
 <form method="get" action="/reports/topic">
-<label>Temat<input name="topic" required minlength="2" maxlength="160" placeholder="np. cyberbezpieczeństwo szpitali"></label>
-<label>Twój profil<input name="profile" maxlength="120" value="ochrona zdrowia i MedTech" placeholder="np. samorząd, przedsiębiorca, pacjent"></label>
-<button>Utwórz raport →</button></form>
-<div class="report-examples"><span>Przykłady:</span><a href="/reports/topic?topic=AI+w+medycynie&profile=ochrona+zdrowia">AI w medycynie</a><a href="/reports/topic?topic=cyberbezpieczeństwo&profile=szpital">Cyberbezpieczeństwo</a><a href="/reports/topic?topic=ochrona+danych+pacjentów&profile=pacjent">Dane pacjentów</a></div>
+<label>{{ t("Temat","Topic") }}<input name="topic" required minlength="2" maxlength="160" placeholder="{{ t('np. cyberbezpieczeństwo szpitali','e.g. hospital cybersecurity') }}"></label>
+<label>{{ t("Twój profil","Your profile") }}<input name="profile" maxlength="120" value="{{ t('ochrona zdrowia i MedTech','healthcare and MedTech') }}" placeholder="{{ t('np. samorząd, przedsiębiorca, pacjent','e.g. local government, business, patient') }}"></label>
+<button>{{ t("Utwórz raport →","Create report →") }}</button></form>
+<div class="report-examples"><span>{{ t("Przykłady:","Examples:") }}</span><a href="/reports/topic?topic=AI+w+medycynie&profile=ochrona+zdrowia">{{ t("AI w medycynie","AI in medicine") }}</a><a href="/reports/topic?topic=cyberbezpieczeństwo&profile=szpital">{{ t("Cyberbezpieczeństwo","Cybersecurity") }}</a><a href="/reports/topic?topic=ochrona+danych+pacjentów&profile=pacjent">{{ t("Dane pacjentów","Patient data") }}</a></div>
 </section>{% endblock %}

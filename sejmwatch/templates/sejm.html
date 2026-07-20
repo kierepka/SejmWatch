@@ -1,13 +1,14 @@
-{% extends "base.html" %}{% block title %}Najnowsze druki — SejmWatch{% endblock %}{% block content %}
-<a href="/" class="back">← Projekty</a>
-<section class="hero"><div class="eyebrow">OFICJALNE API KANCELARII SEJMU</div>
-<h1>Najnowsze druki<br><em>prosto ze źródła.</em></h1>
-{% if term %}<p>X kadencja · {{ term.prints.count }} druków · aktualizacja źródła: {{ term.prints.lastChanged }}</p>{% endif %}</section>
-{% if monitor %}<p class="monitor-status">Monitoring: {{ monitor.status }} · ostatnia kontrola {{ monitor.checked_at }} UTC · sprawdzono {{ monitor.print_count }} druków · nowych od poprzedniej kontroli: {{ monitor.new_count }}</p>{% endif %}
+{% extends "base.html" %}{% block title %}{{ t("Najnowsze druki","Latest prints") }} — SejmWatch{% endblock %}{% block content %}
+<a href="/" class="back">← {{ t("Projekty","Bills") }}</a>
+<section class="hero"><div class="eyebrow">{{ t("OFICJALNE API KANCELARII SEJMU","OFFICIAL CHANCELLERY OF THE SEJM API") }}</div>
+<h1>{{ t("Najnowsze druki","Latest prints") }}<br><em>{{ t("prosto ze źródła.","directly from the source.") }}</em></h1>
+{% if term %}<p>{{ t("X kadencja","10th term") }} · {{ term.prints.count }} {{ t("druków","prints") }} · {{ t("aktualizacja źródła","source updated") }}: {{ term.prints.lastChanged }}</p>{% endif %}</section>
+{% if lang == 'en' %}<div class="source-language">Titles below are official Polish source text. SejmWatch does not create unofficial legal translations.</div>{% endif %}
+{% if monitor %}<p class="monitor-status">{{ t("Monitoring","Monitoring") }}: {{ monitor.status }} · {{ t("ostatnia kontrola","last check") }} {{ monitor.checked_at }} UTC · {{ t("sprawdzono","checked") }} {{ monitor.print_count }} · {{ t("nowych od poprzedniej kontroli","new since previous check") }}: {{ monitor.new_count }}</p>{% endif %}
 {% if error %}<div class="error">{{ error }}</div>{% else %}
 <div class="print-list">{% for print in prints %}<article class="print-row">
   <strong>NR {{ print.number }}</strong>
-  <div><h3>{{ print.title }}</h3><small>{{ print.deliveryDate }} · zmiana {{ print.changeDate }} · {{ print.attachments|length }} załączników</small></div>
-  <form method="post" action="/sejm/import/{{ print.number }}"><button class="import">Importuj PDF</button></form>
+  <div><h3 lang="pl">{{ print.title }}</h3><small>{{ print.deliveryDate }} · {{ t("zmiana","changed") }} {{ print.changeDate }} · {{ print.attachments|length }} {{ t("załączników","attachments") }}</small></div>
+  <form method="post" action="/sejm/import/{{ print.number }}"><button class="import">{{ t("Importuj PDF","Import PDF") }}</button></form>
 </article>{% endfor %}</div>{% endif %}
 {% endblock %}
