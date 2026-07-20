@@ -47,7 +47,10 @@ def ask_anything(request: Request, question: str = Form(..., max_length=2000)):
     client_id = request.client.host if request.client else "unknown"
     try:
         check_rate_limit(client_id)
-        result = ask_ai(question, retrieve_context(default_path(), question))
+        result = ask_ai(
+            question, retrieve_context(default_path(), question),
+            db_path=default_path(),
+        )
         return templates.TemplateResponse(
             request, "global_answer.html", {"question": question, **result}
         )
@@ -278,7 +281,10 @@ def ask(request: Request, case_id: str, question: str = Form(...)):
     try:
         client_id = request.client.host if request.client else "unknown"
         check_rate_limit(client_id)
-        result = ask_ai(question, retrieve_context(default_path(), question))
+        context = retrieve_context(
+            default_path(), question, case_id=case_id
+        )
+        result = ask_ai(question, context, db_path=default_path())
         return templates.TemplateResponse(
             request, "global_answer.html", {"question": question, **result}
         )

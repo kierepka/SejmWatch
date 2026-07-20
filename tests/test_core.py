@@ -103,6 +103,28 @@ def test_global_context_search_returns_page_sources(db):
     assert results[0]["page_number"] >= 1
 
 
+def test_context_search_can_be_scoped_to_case(db):
+    with sqlite3.connect(db) as conn:
+        conn.execute("INSERT INTO cases(id,title) VALUES ('other','Other')")
+        conn.execute(
+            "INSERT INTO documents VALUES "
+            "('other-v1','other','v1','https://example.test/other.pdf',"
+            "'other-unique',CURRENT_TIMESTAMP)"
+        )
+        conn.execute(
+            "INSERT INTO pages VALUES ('other-v1',1,'Okres dostosowawczy innej ustawy.')"
+        )
+        conn.execute(
+            "INSERT INTO pages_fts VALUES "
+            "('other-v1',1,'Okres dostosowawczy innej ustawy.')"
+        )
+    results = retrieve_context(
+        db, "okres dostosowawczy", case_id="test-case"
+    )
+    assert results
+    assert all(row["document_id"].startswith("test-") for row in results)
+
+
 def test_question_rate_limit():
     client = f"test-{time.time_ns()}"
     for _ in range(10):
