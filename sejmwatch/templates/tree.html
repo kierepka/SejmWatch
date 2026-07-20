@@ -2,7 +2,7 @@
 <a href="/cases/{{ case.id }}" class="back">← {{ t("Lista zmian","Change list") }}</a>
 <section class="tree-head"><div><div class="eyebrow">{{ t("INTERAKTYWNE DRZEWO 3D","INTERACTIVE 3D TREE") }}</div><h1 lang="pl">{{ case.title }}</h1><p>{{ t("Użyj strzałek, aby wybierać węzły, albo włącz pełne sterowanie kamerą.","Use the arrow keys to select nodes, or enable full camera controls.") }}</p></div>
 <form class="tree-ask" method="post" action="/ask"><label for="tree-question">{{ t("Zapytaj LLM o te dokumenty","Ask the LLM about these documents") }}</label><textarea id="tree-question" name="question" required maxlength="2000">{{ t("Kto odpowiada za zmiany w tym projekcie i co dokładnie zmieniono?","Who is responsible for this bill and what exactly changed?") }}</textarea><button>{{ t("Zapytaj AI →","Ask AI →") }}</button></form></section>
-{% if lang == 'en' %}<div class="source-language">Node titles and legal excerpts are official Polish source text. No unofficial translation is displayed.</div>{% endif %}
+{% if lang == 'en' %}<div class="source-language">Node titles and legal excerpts retain the exact language of the official source. No unofficial translation is displayed.</div>{% endif %}
 <div class="tree-controls" aria-label="{{ t('Sterowanie drzewem','Tree controls') }}">
   <div class="control-mode" role="group" aria-label="{{ t('Tryb nawigacji','Navigation mode') }}">
     <button id="mode-simple" class="active" type="button" aria-pressed="true">{{ t("Prosty","Simple") }}</button>

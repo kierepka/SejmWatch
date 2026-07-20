@@ -4,7 +4,7 @@
 {% if error %}<div class="error">{{ error }}</div>{% else %}
 <div class="ai-answer">{{ answer }}</div>
 {% if sources %}<div class="section-title"><h2>{{ t("Dokumenty użyte w odpowiedzi","Documents used in the answer") }}</h2><span>{{ sources|length }} {{ t("źródeł","sources") }}</span></div>
-{% if lang == 'en' %}<div class="source-language">The quotations below are exact official Polish source text and have not been translated.</div>{% endif %}
+{% if lang == 'en' %}<div class="source-language">The quotations below retain the exact language of the official source and have not been translated by SejmWatch.</div>{% endif %}
 {% for source in sources %}<blockquote lang="pl"><b>[{{ source.id }}] {{ source.document }} · {{ t("strona","page") }} {{ source.page }}</b><p>„{{ source.text[:360] }}{% if source.text|length > 360 %}…{% endif %}”</p><footer><a href="{{ source.url }}" target="_blank">{{ t("Otwórz oficjalny dokument ↗","Open official document ↗") }}</a></footer></blockquote>{% endfor %}{% endif %}
 <p class="disclaimer">{{ t("Odpowiedź AI może zawierać błędy. W sprawach prawnych i medycznych zweryfikuj źródła.","AI answers may contain errors. Verify the sources in legal and medical matters.") }}</p>
 {% endif %}</section>{% endblock %}

@@ -3,7 +3,7 @@
 <section class="hero"><div class="eyebrow">{{ t("OFICJALNE API KANCELARII SEJMU","OFFICIAL CHANCELLERY OF THE SEJM API") }}</div>
 <h1>{{ t("Najnowsze druki","Latest prints") }}<br><em>{{ t("prosto ze źródła.","directly from the source.") }}</em></h1>
 {% if term %}<p>{{ t("X kadencja","10th term") }} · {{ term.prints.count }} {{ t("druków","prints") }} · {{ t("aktualizacja źródła","source updated") }}: {{ term.prints.lastChanged }}</p>{% endif %}</section>
-{% if lang == 'en' %}<div class="source-language">Titles below are official Polish source text. SejmWatch does not create unofficial legal translations.</div>{% endif %}
+{% if lang == 'en' %}<div class="source-language">Titles below retain the exact language of the official source. SejmWatch does not create unofficial legal translations.</div>{% endif %}
 {% if monitor %}<p class="monitor-status">{{ t("Monitoring","Monitoring") }}: {{ monitor.status }} · {{ t("ostatnia kontrola","last check") }} {{ monitor.checked_at }} UTC · {{ t("sprawdzono","checked") }} {{ monitor.print_count }} · {{ t("nowych od poprzedniej kontroli","new since previous check") }}: {{ monitor.new_count }}</p>{% endif %}
 {% if error %}<div class="error">{{ error }}</div>{% else %}
 <div class="print-list">{% for print in prints %}<article class="print-row">
