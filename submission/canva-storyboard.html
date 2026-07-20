@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#111;color:#0a160f;font-family:Arial,sans-serif}
+.page{position:relative;width:1280px;height:720px;overflow:hidden;background:#f1f0e7}
+.page img{width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,20,14,.9),rgba(5,20,14,.15) 65%,transparent)}
+.caption{position:absolute;left:65px;bottom:58px;max-width:690px;color:#fff}
+.caption small{font:700 15px monospace;letter-spacing:2px;color:#d4ff31}
+.caption h1{margin:12px 0 8px;font-size:54px;line-height:1}.caption p{font-size:22px;line-height:1.35;margin:0}
+.top{top:52px;bottom:auto}.right{left:auto;right:60px;text-align:right}
+.card{background:#f1f0e7;border-left:7px solid #d4ff31;padding:28px;color:#0a160f;box-shadow:10px 10px #0a160f}
+.clean{background:#f1f0e7;display:flex;align-items:center;justify-content:center;padding:70px}
+.clean h1{font-size:70px;margin:0 0 20px}.clean em{font-family:Georgia,serif;color:#276047;font-weight:400}
+.clean p{font-size:25px;line-height:1.45;max-width:900px}.tag{font:700 16px monospace;color:#276047;letter-spacing:2px}
+.footer{position:absolute;bottom:25px;right:35px;font:700 13px monospace;color:#276047}
+</style>
+</head>
+<body>
+<section class="page clean" data-document-role="page" data-label="Opening" data-speaker-notes="Polish bills evolve through long parliamentary PDFs. SejmWatch makes each important claim traceable to an official page.">
+  <div><div class="tag">OPENAI BUILD WEEK · WORK &amp; PRODUCTIVITY</div><h1>SEJM<em>WATCH</em></h1><p>Evidence-first AI for tracking how Polish legislation changes—and what those changes mean.</p></div>
+  <div class="footer">sejmwatch-c0e8a67cd6b2.herokuapp.com/en</div>
+</section>
+<section class="page" data-document-role="page" data-label="Problem and product" data-speaker-notes="People should not need to compare every version manually or trust an uncited AI summary.">
+  <img src="screenshots/01-home-en.png" alt="SejmWatch English home page"><div class="shade"></div>
+  <div class="caption"><small>THE PROBLEM</small><h1>Law changes hide inside long PDFs.</h1><p>SejmWatch connects every answer to verifiable evidence.</p></div>
+</section>
+<section class="page" data-document-role="page" data-label="Official data" data-speaker-notes="The demo uses live Sejm metadata and real official PDFs, not mock legislation.">
+  <img src="screenshots/02-official-prints-en.png" alt="Official Sejm prints"><div class="caption top right card"><small>OFFICIAL SOURCES</small><h1>Live Sejm data</h1><p>PDFs, metadata, page identity and monitoring.</p></div>
+</section>
+<section class="page" data-document-role="page" data-label="Change intelligence" data-speaker-notes="Official versions are linked and compared deterministically at article level.">
+  <img src="screenshots/03-change-timeline-en.png" alt="Legislative change timeline"><div class="caption card"><small>LEGISLATIVE CHANGE INTELLIGENCE</small><h1>Two versions.<br>771 changes.</h1></div>
+</section>
+<section class="page" data-document-role="page" data-label="3D tree" data-speaker-notes="The change tree supports simple keyboard navigation and full camera controls. Official responsibility data is shown without guessing authorship.">
+  <img src="screenshots/04-3d-tree-en.png" alt="3D legislative change tree"><div class="caption top right card"><small>ACCESSIBLE EXPLORATION</small><h1>3D change tree</h1><p>Keyboard, mouse, responsibility and source links.</p></div>
+</section>
+<section class="page" data-document-role="page" data-label="Verified answer" data-speaker-notes="The model explains, but deterministic code verifies the page and exact quotation before showing the answer.">
+  <img src="screenshots/05-verified-answer-en.png" alt="Evidence-backed answer"><div class="caption right card"><small>EVIDENCE-FIRST RAG</small><h1>Page. Quote. Official PDF.</h1></div>
+</section>
+<section class="page" data-document-role="page" data-label="Topic reports" data-speaker-notes="Users can report on any topic. The narrative may be English while official source text is never unofficially translated.">
+  <img src="screenshots/06-report-builder-en.png" alt="Topic report generator"><div class="caption top right card"><small>ANY TOPIC · ANY AUDIENCE</small><h1>Reusable reports</h1><p>AI in medicine, cybersecurity, patient data and more.</p></div>
+</section>
+<section class="page clean" data-document-role="page" data-label="Codex and GPT-5.6" data-speaker-notes="SejmWatch was created entirely through Codex sessions using GPT-5.6. The human retained product decisions about scope, source integrity, attribution and cost.">
+  <div><div class="tag">BUILT ENTIRELY WITH CODEX + GPT-5.6</div><h1>From civic idea<br>to verified product.</h1><p>Architecture · API integration · evidence validation · tests · accessibility · bilingual UI · deployment · live verification</p></div>
+  <div class="footer">github.com/kierepka/SejmWatch · 13 tests passing</div>
+</section>
+<section class="page clean" data-document-role="page" data-label="Closing" data-speaker-notes="SejmWatch makes legislative change understandable without separating an answer from its official source.">
+  <div><div class="tag">OPEN SOURCE · MIT</div><h1>Accessibility<br><em>with verifiability.</em></h1><p>Explore the live demo and inspect every source.</p></div>
+  <div class="footer">devpost.com/software/sejmwatch</div>
+</section>
+</body>
+</html>

@@ -45,7 +45,10 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific Time**.
 
 ## Video
 
-- [ ] Record from `DEMO_SCRIPT.md`.
+- [x] Prepare 2:55 narration and shot-by-shot storyboard.
+- [x] Capture six 16:9 production screenshots.
+- [x] Prepare an editable HTML/Canva import bundle.
+- [ ] Record from `submission/VIDEO_STORYBOARD.md`.
 - [ ] Keep duration under 3:00.
 - [ ] Include spoken Codex usage.
 - [ ] Include spoken explanation and visible evidence of GPT-5.6 use in Codex.
